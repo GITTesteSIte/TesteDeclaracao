@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Atestado de Capacidade Técnica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Estilo do cabeçalho */
+        header {
+            background-color: #005CAA;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Estilo do formulário */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #005CAA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #00408B;
+        }
+
+        /* Estilo do rodapé */
+        footer {
+            background-color: #005CAA;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Estilo responsivo */
+        @media (max-width: 600px) {
+            form {
+                padding: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <h1>Ministério do Esporte</h1>
+    </header>
+
+    <div class="container">
+        <form id="atestadoForm">
+            <h1>Atestado de Capacidade Técnica</h1>
+            <label for="dirigente">Nome do Dirigente:</label>
+            <input type="text" id="dirigente" name="dirigente" required>
+
+            <label for="cpf">CPF do Dirigente:</label>
+            <input type="text" id="cpf" name="cpf" required>
+
+            <label for="entidade">Nome da Entidade:</label>
+            <input type="text" id="entidade" name="entidade" required>
+
+            <label for="cnpj">CNPJ:</label>
+            <input type="text" id="cnpj" name="cnpj" required>
+
+            <label for="endereco">Endereço Completo:</label>
+            <input type="text" id="endereco" name="endereco" required>
+
+            <label for="proposta">Número da Proposta:</label>
+            <input type="text" id="proposta" name="proposta" required>
+
+            <label for="municipio">Município:</label>
+            <input type="text" id="municipio" name="municipio" required>
+
+            <label for="cargo">Cargo do Dirigente:</label>
+            <input type="text" id="cargo" name="cargo" required>
+
+            <button type="submit">Gerar PDF</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Ministério do Esporte</p>
+    </footer>
+
+    <script>
+        // Função para formatar a data como "dd de mês de yyyy"
+        function formatDate() {
+            const today = new Date();
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            return today.toLocaleDateString('pt-BR', options);
+        }
+
+        // Função para gerar o PDF
+        function generatePDF(dirigente, cpf, entidade, cnpj, endereco, proposta, municipio, cargo) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Adicionando título
+            doc.setFont("times", "bold");
+            doc.setFontSize(16);
+            doc.text("ATESTADO DE CAPACIDADE TÉCNICA", 105, 20, { align: "center" });
+
+            // Texto da declaração com espaçamento e justificado
+            doc.setFont("times", "normal");
+            doc.setFontSize(12);
+            doc.setLineHeightFactor(1.5);
+            
+            const declarationText = Eu, ${dirigente}, CPF Nº ${cpf}, ATESTO, para fins de formalização de Termo de Fomento no âmbito do Ministério do Esporte - MESP, que o(a) ${entidade}, inscrito(a) no CNPJ sob o nº ${cnpj}, situado(a) no(a) ${endereco}, possui capacidade técnica e operacional para executar o objeto apresentado na Proposta nº ${proposta}/2024, em atendimento ao art. 33, inciso V, da Lei 13.019 de 2014 e art. 90, inciso XI, da Lei nº 14.791 de 29 de dezembro de 2023 (LDO 2024), considerando as experiências adquiridas na execução de projeto(s)/ação(es) na(s) área(s) esportivo/educacional/social, bem como qualificação profissional do seu quadro pessoal, e comprovação que dispõe de estruturas físicas conforme anexo.\n\nO(s) projeto(s)/ação(es) descrito(s) foi(ram) executado(s) com qualidade, não existindo, até a presente data, fatos que desabonem a conduta e a responsabilidade da entidade com as obrigações assumidas, confirmando assim a capacidade técnica e operacional para a execução do que foi proposto.;
+
+            doc.text(declarationText, 20, 40, { maxWidth: 170, align: "justify" });
+
+            // Adicionar a data do dia automaticamente
+            const currentDate = formatDate();
+            doc.text(${municipio}, ${currentDate}., 20, 140);
+
+            // Assinatura
+            doc.text("___________", 20, 160);
+            doc.text(${dirigente}, 20, 170);
+            doc.text(${cargo}, 20, 180);
+
+            // Rodapé com fonte menor e formatação centralizada
+            doc.setFontSize(10);
+            doc.text("Este documento foi gerado automaticamente pelo Ministério do Esporte.", 105, 290, { align: "center" });
+
+            // Baixar o PDF gerado
+            doc.save(Atestado_Capacidade_Tecnica_${dirigente}.pdf);
+        }
+
+        // Função principal para capturar o evento de submit e gerar o PDF
+        document.getElementById('atestadoForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita o reload da página
+
+            const dirigente = document.getElementById('dirigente').value;
+            const cpf = document.getElementById('cpf').value;
+            const entidade = document.getElementById('entidade').value;
+            const cnpj = document.getElementById('cnpj').value;
+            const endereco = document.getElementById('endereco').value;
+            const proposta = document.getElementById('proposta').value;
+            const municipio = document.getElementById('municipio').value;
+            const cargo = document.getElementById('cargo').value;
+
+            generatePDF(dirigente, cpf, entidade, cnpj, endereco, proposta, municipio, cargo); // Chama a função para gerar o PDF
+        });
+    </script>
+</body>
+</html>
